@@ -18,6 +18,7 @@ class StudentListView(APIView):
         students = Student.objects.all()
         paginator = StudentPagination()
         paginated_data = paginator.paginate_queryset(students, request)
+        print(paginated_data)
         serializer = StudentListSerializer(
             paginated_data,
             many=True,
