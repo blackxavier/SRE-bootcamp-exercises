@@ -64,42 +64,56 @@ This project is a Django-based API for managing student information. It allows f
    ```bash
    git clone https://github.com/your-username/student-management-api.git
    cd student-management-api
+```
 
 Create a virtual environment
+```
 
-bash
-Copy code
 python -m venv env
 Activate the virtual environment
+```
+
 
 On Windows:
-bash
-Copy code
+
+```
+
 .\env\Scripts\activate
+
+```
+
 On macOS/Linux:
-bash
-Copy code
+
+```
 source env/bin/activate
 Install dependencies
 
-bash
-Copy code
+```
+
+```
 pip install -r requirements.txt
+
+```
+
 Apply database migrations
 
-bash
-Copy code
+
+```
 python manage.py migrate
+
+```
 Run the development server
 
-bash
-Copy code
+```
 python manage.py runserver
+
+```
+
 Access the API
 
 Open your web browser and navigate to http://127.0.0.1:8000/.
 
-```
+
 
 Usage
 Running the API
