@@ -45,6 +45,7 @@ This project is a Django-based API for managing student information. It allows f
 ├── README.md
 └── requirements.txt
 
+```
 
 ## Setup Instructions
 
@@ -55,6 +56,8 @@ This project is a Django-based API for managing student information. It allows f
 - Git
 
 ### Local Development Setup
+
+```
 
 1. **Clone the repository**
 
@@ -95,6 +98,8 @@ python manage.py runserver
 Access the API
 
 Open your web browser and navigate to http://127.0.0.1:8000/.
+
+```
 
 Usage
 Running the API
