@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -9,21 +10,26 @@ from student.serializers import (
     StudentPostSerializer,
     StudentDetailSerializer,
 )
+from student.pagination import StudentPagination
 
 
 class StudentListView(APIView):
     def get(self, request):
         students = Student.objects.all()
+        paginator = StudentPagination()
+        paginated_data = paginator.paginate_queryset(students, request)
+        print(paginated_data)
         serializer = StudentListSerializer(
-            students,
+            paginated_data,
             many=True,
             context={
                 "request": request,
             },
         )
+        paginated_response = paginator.get_paginated_response(serializer.data)
         message = {
             "status": "success",
-            "data": serializer.data,
+            "data": paginated_response.data,
         }
         return Response(message, status=status.HTTP_200_OK)
 
