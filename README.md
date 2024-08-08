@@ -24,28 +24,7 @@ This project is a Django-based API for managing student information. It allows f
 - Pagination support for listing students.
 - RESTful API built using Django Rest Framework.
 
-### Project Structure
 
-```.
-├── app/
-│ ├── init.py
-│ ├── admin.py
-│ ├── models.py
-│ ├── serializers.py
-│ ├── tests.py
-│ ├── urls.py
-│ ├── views.py
-│ └── pagination.py
-├── project_name/
-│ ├── init.py
-│ ├── settings.py
-│ ├── urls.py
-│ └── wsgi.py
-├── manage.py
-├── README.md
-└── requirements.txt
-
-```
 
 ## Setup Instructions
 
@@ -128,7 +107,6 @@ DELETE /students/{id}/: Delete a student record.
 To run tests, use the following command:
 
 ```
-
 python manage.py test
 ```
 
