@@ -69,9 +69,9 @@ This project is a Django-based API for managing student information. It allows f
 2. **Create a virtual environment**
 ```
 python -m venv env
-Activate the virtual environment
-```
 
+```
+Activate the virtual environment
 On Windows:
 
 ```
@@ -82,8 +82,10 @@ On macOS/Linux:
 
 ```
 source env/bin/activate
-3. **Install dependencies**
+
 ```
+
+3. **Install dependencies**
 
 ```
 pip install -r requirements.txt
@@ -101,32 +103,38 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Access the API
+### Access the API
 
 Open your web browser and navigate to http://127.0.0.1:8000/.
 
 
 
-Usage
+### Usage
+
 Running the API
 With the development server running, you can interact with the API using tools like curl, Postman, or directly through your web browser.
 
-API Endpoints
+### API Endpoints
+
+```
 GET /students/: Retrieve a paginated list of students.
 POST /students/: Create a new student record.
 GET /students/{id}/: Retrieve a specific student's details.
 PUT /students/{id}/: Update a student's details.
 DELETE /students/{id}/: Delete a student record.
+```
 
-Testing
+### Testing
 To run tests, use the following command:
 
-bash
-Copy code
+```
+
 python manage.py test
+```
+
 This will run the tests defined in tests.py, ensuring that the API functions as expected.
 
-Future Work
+### Future Work
 This project is in its early stages and not yet in a final state. Upcoming developments include:
 
 Implementing full CI/CD pipelines and other DevOps practices.
@@ -135,13 +143,10 @@ Adding comprehensive documentation and improved error handling.
 Contributing
 Contributions are welcome! Please open an issue or submit a pull request with any changes or improvements you'd like to see.
 
-License
+### License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-csharp
-Copy code
 
 
-Copy and paste this into your `README.md` file, and it will be properly formatted when viewed on platforms like GitHub.
 
 
