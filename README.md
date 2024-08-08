@@ -26,7 +26,7 @@ This project is a Django-based API for managing student information. It allows f
 
 ### Project Structure
 
-.
+```.
 ├── app/
 │ ├── init.py
 │ ├── admin.py
