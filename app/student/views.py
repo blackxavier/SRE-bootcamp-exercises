@@ -1,5 +1,7 @@
 from rest_framework.views import APIView
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListCreateAPIView
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -13,27 +15,26 @@ from student.serializers import (
 from student.pagination import StudentPagination
 
 
-class StudentListView(APIView):
+class StudentListCreateView(ListCreateAPIView):
+    queryset = Student.objects.all().order_by("date_created")
+    serializer_class = StudentListSerializer
+    pagination_class = StudentPagination
+
+    @extend_schema(operation_id="list_students")
     def get(self, request):
-        students = Student.objects.all()
-        paginator = StudentPagination()
-        paginated_data = paginator.paginate_queryset(students, request)
-        print(paginated_data)
-        serializer = StudentListSerializer(
-            paginated_data,
-            many=True,
-            context={
-                "request": request,
-            },
+        paginated_students = self.paginate_queryset(self.queryset)
+        serializer = self.get_serializer(
+            paginated_students, many=True, context={"request": request}
         )
-        paginated_response = paginator.get_paginated_response(serializer.data)
+        paginated_response = self.get_paginated_response(serializer.data)
         message = {
             "status": "success",
             "data": paginated_response.data,
         }
         return Response(message, status=status.HTTP_200_OK)
 
-    def post(self, request: Request):
+    @extend_schema(operation_id="create_students")
+    def post(self, request):
         serializer = StudentPostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -44,10 +45,12 @@ class StudentListView(APIView):
 
 
 class StudentDetailView(APIView):
+    serializer_class = StudentDetailSerializer
+
     def get(self, request: Request, pk):
         try:
             student = Student.objects.get(pk=pk)
-            serializer = StudentDetailSerializer(student)
+            serializer = self.serializer_class(student)
             message = {"status": "success", "data": serializer.data}
             return Response(message, status=status.HTTP_200_OK)
         except Student.DoesNotExist:
@@ -55,9 +58,10 @@ class StudentDetailView(APIView):
             return Response(message, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request: Request, pk):
+        serializer_class = StudentPostSerializer
         try:
             student = Student.objects.get(pk=pk)
-            serializer = StudentPostSerializer(student, data=request.data)
+            serializer = serializer_class(student, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 message = {"status": "success", "data": serializer.data}
