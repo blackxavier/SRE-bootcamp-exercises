@@ -16,7 +16,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-
+ENV DJANGO_ENV=container
+ENV DATABASE_URL=sqlite:///db/db.sqlite3
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

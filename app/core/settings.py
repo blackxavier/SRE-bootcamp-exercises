@@ -1,5 +1,13 @@
 from pathlib import Path
 import os
+import environ
+
+# Initialize environment variables
+env = environ.Env(DJANGO_ENV=(str, "development"))
+
+# Read .env file if it exists
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,23 +69,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
+# Database settings
+DATABASES = {"default": env.db(default="sqlite:///db.sqlite3")}
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-if USE_CONTAINER is True:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db/db.sqlite3",
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+# # Database
+# # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# if USE_CONTAINER is True:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db/db.sqlite3",
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db.sqlite3",
+#         }
+#     }
 
 
 # Password validation
@@ -133,6 +143,5 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "This API is used to perform basic CRUD operations on the Students Resource",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    
     # OTHER SETTINGS
 }
