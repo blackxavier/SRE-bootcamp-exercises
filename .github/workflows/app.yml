@@ -141,12 +141,12 @@ jobs:
           context: .
           # load: true
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/practice-gha-app:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
           # cache-from: type=local,src=/tmp/.buildx-cache
           # cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Build and Test
         run: |
           docker images
-          docker run --name web -p 8000:8000 -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/practice-gha-app:${{ github.sha }}
-          wget -O - http://127.0.0.1:8000/live
+          docker run --name web -p 8000:8000 -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
+          wget -O - http://127.0.0.1:8000/healthcheck
