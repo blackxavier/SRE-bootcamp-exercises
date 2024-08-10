@@ -1,0 +1,84 @@
+name: CI/CD for django sample app
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/*"
+  workflow_dispatch:
+
+jobs:
+  Linting:
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04", "ubuntu-22.04"]
+    runs-on: ${{ matrix.os }}
+
+    container: python:3.9
+
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DATABASE}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --name postgres
+
+    env:
+      DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DATABASE }}
+      ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
+      
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Python packages ${{ matrix.os }}
+
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Runs migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
+      - name: Lint with flake8
+        run: flake8
+
+      - name: Run tests with coverage
+        run: |
+          pip install coverage
+          coverage run manage.py test
+          python manage.py test
+          coverage report
+          coverage xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-coverage-report
+          path: coverage.xml
+
+      - name: Generate HTML report
+        run: coverage html
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-coverage-html-report
+          path: htmlcov

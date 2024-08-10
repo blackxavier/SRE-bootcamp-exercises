@@ -34,6 +34,7 @@ RUN adduser \
 
 WORKDIR /home/app
 ENV APP_HOME=/home/app
+ENV ALLOWED_HOSTS=*
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
@@ -59,7 +60,7 @@ COPY app/ .
 EXPOSE 8000
 
 
-COPY ./entrypoint.sh .
+COPY ./entrypoint/entrypoint.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
 RUN chmod +x  $APP_HOME/entrypoint.sh
 # run entrypoint.sh
