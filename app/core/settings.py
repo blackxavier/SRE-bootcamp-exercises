@@ -1,31 +1,15 @@
 from pathlib import Path
 import os
-import environ
-
-# Initialize environment variables
-env = environ.Env(DJANGO_ENV=(str, "development"))
-
-# Read .env file if it exists
-environ.Env.read_env()
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-zx_0@gx07z%l&1^18cuoo)p#bk6hfc&6k=*=%g+o1*n&u8rh@w"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-USE_CONTAINER = False
-# Application definition
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -70,24 +54,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 # Database settings
-DATABASES = {"default": env.db(default="sqlite:///db.sqlite3")}
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=f'postgres://{env("SQL_USER")}:{env("SQL_PASSWORD")}@{env("SQL_HOST")}:{env("SQL_PORT")}/{env("SQL_DATABASE")}'
+#     )
+# }
 
-# # Database
-# # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-# if USE_CONTAINER is True:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": BASE_DIR / "db/db.sqlite3",
-#         }
-#     }
-# else:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": BASE_DIR / "db.sqlite3",
-#         }
-#     }
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+}
 
 
 # Password validation
@@ -121,7 +103,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
