@@ -1,4 +1,4 @@
-name: CI/CD for django sample app
+name: CI/CD for django sample app used in the SRE BOOTCAMP EXERCISE
 
 on:
   push:
@@ -38,10 +38,10 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
-      - name: Setup virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+      # - name: Setup virtual environment
+      #   run: |
+      #     python -m venv venv
+      #     source venv/bin/activate
 
       - name: Cache Python packages ${{ matrix.os }}
 
