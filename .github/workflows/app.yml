@@ -68,7 +68,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pip install coverage
+          cd app
           coverage run manage.py test
           python manage.py test
           coverage report
@@ -81,7 +81,9 @@ jobs:
           path: coverage.xml
 
       - name: Generate HTML report
-        run: coverage html
+        run: |
+          cd app
+          coverage html
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
