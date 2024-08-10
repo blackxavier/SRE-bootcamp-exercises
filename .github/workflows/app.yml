@@ -42,7 +42,6 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-        shell: bash
 
       - name: Cache Python packages ${{ matrix.os }}
 
@@ -57,23 +56,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        shell: bash -l {0}
-        env:
-          PATH: ./venv/bin:$PATH
 
       - name: Runs migrations
         run: |
           python manage.py makemigrations
           python manage.py migrate
-        shell: bash -l {0}
-        env:
-          PATH: ./venv/bin:$PATH
 
       - name: Lint with flake8
         run: flake8
-        shell: bash -l {0}
-        env:
-          PATH: ./venv/bin:$PATH
 
       - name: Run tests with coverage
         run: |
@@ -82,9 +72,6 @@ jobs:
           python manage.py test
           coverage report
           coverage xml
-        shell: bash -l {0}
-        env:
-          PATH: ./venv/bin:$PATH
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -94,9 +81,6 @@ jobs:
 
       - name: Generate HTML report
         run: coverage html
-        shell: bash -l {0}
-        env:
-          PATH: ./venv/bin:$PATH
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
