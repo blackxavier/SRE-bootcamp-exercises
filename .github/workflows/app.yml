@@ -148,5 +148,5 @@ jobs:
       - name: Build and Test
         run: |
           docker images
-          docker run --name web -p 8000:8000 -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
-          wget -O - http://127.0.0.1:8000/healthcheck
+          docker run --name web -p  -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
+          wget -O - http://127.0.0.1/healthcheck
