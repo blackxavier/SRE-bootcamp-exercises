@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-coverage-report
-          path: coverage.xml
+          path: app/coverage.xml
 
       - name: Generate HTML report
         run: |
@@ -89,4 +89,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-coverage-html-report
-          path: htmlcov
+          path: app/htmlcov
