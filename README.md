@@ -33,6 +33,7 @@ This project is a Django-based API for managing student information. It allows f
 - Python 3.8 or later
 - pip (Python package installer)
 - Git
+- docker
 
 ### Local Development Setup
 
@@ -41,66 +42,37 @@ This project is a Django-based API for managing student information. It allows f
 1. **Clone the repository**
 
 ```
-   git clone https://github.com/your-username/student-management-api.git
-   cd student-management-api
+   git clone https://github.com/blackxavier/SRE-bootcamp-exercises.git
+   cd SRE-bootcamp-exercises
 ```
 
-2. **Create a virtual environment**
-```
-python -m venv env
+2. **Run compose file**
 
 ```
-Activate the virtual environment
-On Windows:
-
-```
-.\env\Scripts\activate
+docker compose up
 ```
 
-On macOS/Linux:
-
-```
-source env/bin/activate
-
-```
-
-3. **Install dependencies**
-
-```
-pip install -r requirements.txt
-```
-
-4. **Apply database migrations**
-
-```
-python manage.py migrate
-```
-
-5. **Run the development server**
-
-```
-python manage.py runserver
-```
 
 ### Access the API
 
-Open your web browser and navigate to http://127.0.0.1:8000/.
+Open your web browser and navigate to http://127.0.0.1:8000/. This opens up a swagger endpoint to interface with the API
 
 
 
 ### Usage
 
 Running the API
-With the development server running, you can interact with the API using tools like curl, Postman, or directly through your web browser.
+Using the swagger endpoint, you can interact with the API.
 
 ### API Endpoints
 
 ```
-GET /students/: Retrieve a paginated list of students.
-POST /students/: Create a new student record.
-GET /students/{id}/: Retrieve a specific student's details.
-PUT /students/{id}/: Update a student's details.
-DELETE /students/{id}/: Delete a student record.
+GET api/v1/students/: Retrieve a paginated list of students.
+POST api/v1/students/: Create a new student record.
+GET api/v1/students/{id}/: Retrieve a specific student's details.
+PUT api/v1/students/{id}/: Update a student's details.
+DELETE api/v1/students/{id}/: Delete a student record.
+GET api/v1/healthcheck/ : Retrieves health information of API
 ```
 
 ### Testing
