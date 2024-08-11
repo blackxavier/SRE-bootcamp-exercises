@@ -125,16 +125,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build with docker compose
         run: |
-          docker compose -f docker-compose.prod.yml up
-      
+          docker compose -f docker-compose.prod.yml up --build
+
       - name: Push images built from previous step
         run: |
           docker compose push
-      
-      
 
       # - name: Build Image to Docker Hub
       #   uses: docker/build-push-action@v6

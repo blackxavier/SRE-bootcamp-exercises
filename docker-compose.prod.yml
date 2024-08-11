@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: .
-      image: ${DOCKER_USERNAME}web${VERSION}
+      image: ${DOCKER_USERNAME}web${DOCKER_VERSION}
       dockerfile: Dockerfile.prod
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
     volumes:
@@ -18,7 +18,7 @@ services:
   nginx:
     build: 
       context: nginx/
-      image: ${DOCKER_USERNAME}ingress${VERSION}
+      image: ${DOCKER_USERNAME}ingress${DOCKER_VERSION}
     volumes:
       - static_volume:/home/app/staticfiles
     ports:
