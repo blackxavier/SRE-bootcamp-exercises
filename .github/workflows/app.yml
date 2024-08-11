@@ -132,7 +132,7 @@ jobs:
           context: .
           # load: true
           push: true
-          file: Dockerfile
+          file: docker-compose.prod.yml
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
 
       - name: Build Image to GHCR
@@ -141,6 +141,7 @@ jobs:
           context: .
           # load: true
           push: true
+          file: docker-compose.prod.yml
           tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}.1
           # cache-from: type=local,src=/tmp/.buildx-cache
           # cache-to: type=local,dest=/tmp/.buildx-cache
