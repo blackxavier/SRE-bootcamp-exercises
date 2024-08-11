@@ -35,6 +35,8 @@ jobs:
     env:
       #DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DATABASE }}
       ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
+      DOCKER_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
+      DOCKER_VERSION: ${{secrets.VERSION}}
 
     steps:
       - name: checkout code
