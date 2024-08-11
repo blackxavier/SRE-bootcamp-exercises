@@ -6,6 +6,9 @@ services:
       image: ${DOCKER_USERNAME}web${DOCKER_VERSION}
       dockerfile: Dockerfile.prod
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    environment:
+      - DOCKER_USERNAME=${DOCKER_USERNAME}
+      - DOCKER_VERSION=${DOCKER_VERSION}
     volumes:
       - static_volume:/home/app/staticfiles
     expose:
@@ -16,11 +19,16 @@ services:
       - db
 
   nginx:
-    build: 
+    build:
       context: nginx/
       image: ${DOCKER_USERNAME}ingress${DOCKER_VERSION}
     volumes:
       - static_volume:/home/app/staticfiles
+    environment:
+      - DOCKER_USERNAME=${DOCKER_USERNAME}
+      - DOCKER_VERSION=${DOCKER_VERSION}
+    env_file:
+      - ./env_files/.env.prod.app
     ports:
       - "80:80"
     depends_on:
