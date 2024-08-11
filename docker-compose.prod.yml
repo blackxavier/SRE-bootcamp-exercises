@@ -13,7 +13,7 @@ services:
     expose:
       - "8000"
     env_file:
-      - app.env
+      - ./env_files/app.env
     depends_on:
       - db
 
@@ -34,7 +34,7 @@ services:
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
     env_file:
-      - ./env_files/.env.prod.db
+      - ./env_files/db.env
     expose:
       - "5432"
     healthcheck:
@@ -47,7 +47,7 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4:latest
     env_file:
-      - ./env_files/.env.prod.pg-admin
+      - ./env_files/pg-admin.env
     environment:
       - PGADMIN_CONFIG_LOGIN_BANNER="Authorisedusers"
     ports:
