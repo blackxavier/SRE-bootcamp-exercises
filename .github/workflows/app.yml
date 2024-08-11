@@ -149,4 +149,5 @@ jobs:
         run: |
           docker images
           docker run --name web -p 80:80  -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
+          docker ps -a
           wget -O - http://127.0.0.1/api/v1/healthcheck
