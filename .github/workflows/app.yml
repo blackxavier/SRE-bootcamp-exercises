@@ -128,6 +128,8 @@ jobs:
 
       - name: Build with docker compose
         run: |
+          docker images
+          docker ps -a
           docker compose -f docker-compose.prod.yml up --build
 
       - name: Push images built from previous step
