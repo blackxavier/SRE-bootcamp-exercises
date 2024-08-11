@@ -1,4 +1,4 @@
-version: "3.8"
+# version: "3.8"
 services:
   web:
     build:
@@ -23,7 +23,6 @@ services:
     image: chiefbuilder/ingress
     volumes:
       - static_volume:/home/app/staticfiles
-
     ports:
       - "80:80"
     depends_on:
