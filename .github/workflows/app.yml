@@ -32,9 +32,8 @@ jobs:
           --health-retries 10
           --name db
       # uses services to create a DB to run migrations and test
-    env:
-      #DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DATABASE }}
-      ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
+    # env:
+    #   #DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DATABASE }}
 
     steps:
       - name: checkout code
