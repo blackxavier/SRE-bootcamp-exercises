@@ -127,6 +127,7 @@ jobs:
 
       - name: Build with docker compose
         run: |
+          ls -la
           docker images
           docker ps -a
           docker compose -f docker-compose.prod.yml up --build
