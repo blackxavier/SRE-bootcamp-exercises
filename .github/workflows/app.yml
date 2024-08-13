@@ -125,23 +125,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create env files
-        run: |
-          echo "DEBUG=${{ secrets.DEBUG }}" > ./env_files/app.env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > ./env_files/app.env
-          echo "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" > ./env_files/app.env
-          echo "POSTGRES_ENGINE=${{ secrets.POSTGRES_ENGINE }}" > ./env_files/app.env
-          echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" > ./env_files/app.env
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" > ./env_files/app.env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > ./env_files/app.env
-          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" > ./env_files/app.env
-          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" > ./env_files/app.env
-          echo "DATABASE=${{ secrets.DATABASE }}" > ./env_files/app.env
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" > ./env_files/pg-db.env
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DATABASE }}" > ./env_files/pg-db.env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > ./env_files/pg-db.env
-          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" > ./env_files/pg-admin.env
-          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" > ./env_files/pg-admin.env
+      
 
       - name: Build with docker compose
         run: |
