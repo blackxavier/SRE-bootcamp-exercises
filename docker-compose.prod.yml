@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile.prod
     image: chiefbuilder/web
     environment:
-      - SECRET_KEY=${SECRET_KEY}}
-      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}}
+      - SECRET_KEY=${SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       - POSTGRES_ENGINE=${POSTGRES_ENGINE}
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USER}
