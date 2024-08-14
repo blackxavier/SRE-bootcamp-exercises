@@ -144,7 +144,7 @@ jobs:
           ls -la
           docker images
           docker ps -a
-          docker compose -f docker-compose.prod.yml up --build
+          docker compose -d -f docker-compose.prod.yml up --build
 
       - name: Push images built from previous step
         run: |
