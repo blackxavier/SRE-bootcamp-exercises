@@ -145,6 +145,8 @@ jobs:
           docker images
           docker ps -a
           docker compose -f docker-compose.prod.yml up -d --build
+          docker ps -a
+          wget -O - http://127.0.0.1/api/v1/healthcheck
 
       - name: Push images built from previous step
         run: |
