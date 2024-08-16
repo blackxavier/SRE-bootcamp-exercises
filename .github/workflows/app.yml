@@ -159,7 +159,8 @@ jobs:
     steps:
       - name: "Install Ansible"
         run: |
-          ls -ltr
+          ls -l
+          pwd
           ./ansible-install.sh
 
       - name: "Print Ansible version"
