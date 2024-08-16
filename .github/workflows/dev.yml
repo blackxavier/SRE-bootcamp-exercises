@@ -1,0 +1,178 @@
+name: CI/CD for django sample app used in the SRE BOOTCAMP EXERCISE
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #     - "feature/*"
+  workflow_dispatch:
+# triggered by push to the main branch and and branch prefixed with 'feature' branch
+
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+  POSTGRES_ENGINE: ${{ secrets.POSTGRES_ENGINE }}
+  POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+  DATABASE: ${{ secrets.DATABASE }}
+  DEBUG: ${{ secrets.DEBUG }}
+  PGADMIN_DEFAULT_EMAIL: ${{secrets.PGADMIN_DEFAULT_EMAIL}}
+  PGADMIN_DEFAULT_PASSWORD: ${{secrets.PGADMIN_DEFAULT_PASSWORD}}
+
+jobs:
+  Linting:
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04", "ubuntu-22.04"]
+    runs-on: ${{ matrix.os }}
+
+    container: python:3.9
+    # uses container
+
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DATABASE}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --name db
+      # uses services to create a DB to run migrations and test
+    # env:
+    #   #DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DATABASE }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Python packages ${{ matrix.os }}
+
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Runs migrations
+        run: |
+          cd app
+          python manage.py makemigrations
+          python manage.py migrate
+
+      - name: Lint with flake8
+        run: flake8
+
+      - name: Run tests with coverage
+        run: |
+          cd app
+          coverage run manage.py test
+          python manage.py test
+          coverage report
+          coverage xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-coverage-report
+          path: app/coverage.xml
+
+      - name: Generate HTML report
+        run: |
+          cd app
+          coverage html
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-coverage-html-report
+          path: app/htmlcov
+
+  build:
+    name: Docker Login
+    needs: [Linting]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Dockerhub Login
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: GHCR Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build with docker compose
+        run: |
+          ls -la
+          docker images
+          docker ps -a
+          docker compose -d -f docker-compose.prod.yml up --build
+
+      - name: Push images built from previous step
+        run: |
+          docker compose push
+
+      # - name: Build Image to Docker Hub
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     # load: true
+      #     push: true
+      #     file: docker-compose.prod.yml
+      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
+
+      # - name: Build Image to GHCR
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     # load: true
+      #     push: true
+      #     file: docker-compose.prod.yml
+      #     tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}.1
+      #     # cache-from: type=local,src=/tmp/.buildx-cache
+      #     # cache-to: type=local,dest=/tmp/.buildx-cache
+
+      # - name: Build and Test
+      #   run: |
+      #     docker images
+      #     docker run --name web -p 80:80  -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
+      #     docker ps -a
+      #     wget -O - http://127.0.0.1/api/v1/healthcheck
