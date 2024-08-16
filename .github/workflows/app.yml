@@ -160,7 +160,7 @@ jobs:
       - name: "Install Ansible"
         run: |
           ls -ltr
-          ./install_ansible.sh
+          ./ansible-install.sh
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
