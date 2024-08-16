@@ -158,7 +158,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Install Ansible"
-        run: ./install_ansible.sh
+        run: |
+          ls -ltr
+          ./install_ansible.sh
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
