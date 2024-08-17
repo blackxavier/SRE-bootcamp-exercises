@@ -167,7 +167,7 @@ jobs:
           pwd
           ls /
           ls /home/runner/work/SRE-bootcamp-exercises
-          ls SRE-bootcamp-exercises/
+          cd SRE-bootcamp-exercises
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
