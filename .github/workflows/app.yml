@@ -164,7 +164,7 @@ jobs:
           sudo add-apt-repository ppa:ansible/ansible -y
           sudo apt update
           sudo apt install -y ansible
-          ls $GITHUB_WORKSPACE
+          ls -la $GITHUB_WORKSPACE
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
