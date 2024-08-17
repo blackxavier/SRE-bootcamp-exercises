@@ -159,15 +159,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: "Change Directory"
-        run: |
-          #!/bin/bash
-          cd ..
-          ls -la
-          cd SRE-bootcamp-exercises/
 
       - name: "Install Ansible"
-        run: ansible-install.sh
+        run: bash $GITHUB_WORKSPACE/ansible-install.sh
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
