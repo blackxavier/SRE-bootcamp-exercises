@@ -157,6 +157,8 @@ jobs:
         os: ["ubuntu-20.04", "ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: "Change Directory"
         run: |
           #!/bin/bash
