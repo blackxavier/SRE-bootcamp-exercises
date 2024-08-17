@@ -15,3 +15,11 @@
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > ./env_files/pg-db.env
           echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" > ./env_files/pg-admin.env
           echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" > ./env_files/pg-admin.env
+
+
+          sudo apt update
+          sudo apt install -y software-properties-common
+          sudo add-apt-repository ppa:ansible/ansible -y
+          sudo apt update
+          sudo apt install -y ansible
+          ls -la $GITHUB_WORKSPACE

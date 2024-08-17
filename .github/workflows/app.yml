@@ -158,13 +158,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Install Ansible"
-        run: |
-          sudo apt update
-          sudo apt install -y software-properties-common
-          sudo add-apt-repository ppa:ansible/ansible -y
-          sudo apt update
-          sudo apt install -y ansible
-          ls -la $GITHUB_WORKSPACE
+        run: ansible-install.sh
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
