@@ -164,10 +164,7 @@ jobs:
           sudo add-apt-repository ppa:ansible/ansible -y
           sudo apt update
           sudo apt install -y ansible
-          pwd
-          ls /
-          ls /home/runner/work/SRE-bootcamp-exercises
-          cd SRE-bootcamp-exercises
+          ls $GITHUB_WORKSPACE
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
