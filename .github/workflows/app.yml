@@ -166,7 +166,8 @@ jobs:
           sudo apt install -y ansible
           pwd
           ls /
-          ls
+          ls /home/runner/work/SRE-bootcamp-exercises
+          ls SRE-bootcamp-exercises/
 
       - name: "Print Ansible version"
         run: ansible-playbook --version
