@@ -160,7 +160,8 @@ jobs:
       - name: "Change Directory"
         run: |
           #!/bin/bash
-          ls -la $GITHUB_WORKSPACE
+          cd ..
+          ls -la
 
       - name: "Install Ansible"
         run: ansible-install.sh
