@@ -158,8 +158,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Change Directory"
-        run: cd $GITHUB_WORKSPACE
-        
+        run: |
+          #!/bin/bash
+          cd $GITHUB_WORKSPACE
+          pwd
+          ls
+
       - name: "Install Ansible"
         run: ansible-install.sh
 
