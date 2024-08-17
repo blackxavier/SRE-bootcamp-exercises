@@ -162,6 +162,7 @@ jobs:
           #!/bin/bash
           cd ..
           ls -la
+          cd SRE-bootcamp-exercises/
 
       - name: "Install Ansible"
         run: ansible-install.sh
