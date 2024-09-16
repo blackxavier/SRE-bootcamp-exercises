@@ -1,5 +1,7 @@
 from pathlib import Path
+import json
 import os
+import logging.config
 
 
 # Base directory
@@ -54,13 +56,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
-
-# Database settings
-# DATABASES = {
-#     "default": dj_database_url.config(
-#         default=f'postgres://{env("SQL_USER")}:{env("SQL_PASSWORD")}@{env("SQL_HOST")}:{env("SQL_PORT")}/{env("SQL_DATABASE")}'
-#     )
-# }
 
 DATABASES = {
     "default": {
@@ -129,3 +124,37 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     # OTHER SETTINGS
 }
+
+# Logging Configuration
+
+# Clear prev config
+LOGGING_CONFIG = None
+
+# Get loglevel from env
+LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
+
+logging.config.dictConfig(
+    {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "console": {
+                "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s",
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "console",
+            },
+        },
+        "loggers": {
+            "": {
+                "level": LOGLEVEL,
+                "handlers": [
+                    "console",
+                ],
+            },
+        },
+    }
+)

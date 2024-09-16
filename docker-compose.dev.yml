@@ -1,4 +1,6 @@
 version: "3.8"
+
+# web contianer that serves the django app
 services:
   web:
     build:
@@ -15,6 +17,8 @@ services:
       - ./env_files/app.env
     depends_on:
       - db
+    networks:
+      - my_custom_network
 
   nginx:
     build:
@@ -26,16 +30,20 @@ services:
       - "80:80"
     depends_on:
       - web
+    networks:
+      - my_custom_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/v1/healthcheck/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   db:
     image: postgres:15
     restart: always
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
     env_file:
       - ./env_files/pg-db.env
     expose:
@@ -45,19 +53,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - my_custom_network
 
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:latest
     environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
       - PGADMIN_CONFIG_LOGIN_BANNER="Authorisedusers"
     env_file:
       - ./env_files/pg-admin.env
     ports:
       - "5050:80"
     restart: always
+    networks:
+      - my_custom_network
 
   dozzle:
     container_name: dozzle
@@ -66,7 +76,26 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9999:8080"
+    networks:
+      - my_custom_network
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - my_custom_network
 
 volumes:
   postgres_data_prod:
   static_volume:
+  portainer_data:
+
+networks:
+  my_custom_network:
+    driver: bridge
