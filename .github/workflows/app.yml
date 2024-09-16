@@ -102,7 +102,7 @@ jobs:
           path: app/htmlcov
 
   build:
-    name: Docker Login
+    name: Build and push app to docker hub & GHCR
     needs: [Linting]
     runs-on: ubuntu-latest
     permissions:
@@ -152,6 +152,8 @@ jobs:
         run: |
           docker compose -f docker-compose.prod.yml push
   deploy:
+    name: Deploy app on EC2 Instance
+    needs: [Linting, build]
     strategy:
       matrix:
         os: ["ubuntu-20.04", "ubuntu-22.04"]
@@ -177,30 +179,3 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID}}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region us-east-1
-
-      # - name: Build Image to Docker Hub
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     # load: true
-      #     push: true
-      #     file: docker-compose.prod.yml
-      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
-
-      # - name: Build Image to GHCR
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     # load: true
-      #     push: true
-      #     file: docker-compose.prod.yml
-      #     tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}.1
-      #     # cache-from: type=local,src=/tmp/.buildx-cache
-      #     # cache-to: type=local,dest=/tmp/.buildx-cache
-
-      # - name: Build and Test
-      #   run: |
-      #     docker images
-      #     docker run --name web -p 80:80  -d --rm ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.VERSION }}
-      #     docker ps -a
-      #     wget -O - http://127.0.0.1/api/v1/healthcheck
