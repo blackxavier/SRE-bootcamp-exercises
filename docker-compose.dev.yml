@@ -38,6 +38,19 @@ services:
       timeout: 10s
       retries: 5
 
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: always
+    ports:
+      - "81:81"
+      - "443:443"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - my_custom_network
+
   db:
     image: postgres:15
     restart: always
@@ -95,6 +108,8 @@ volumes:
   postgres_data_prod:
   static_volume:
   portainer_data:
+  npm_data:
+  npm_letsencrypt:
 
 networks:
   my_custom_network:
