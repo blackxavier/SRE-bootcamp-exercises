@@ -150,7 +150,7 @@ jobs:
 
       - name: Push images built from previous step
         run: |
-          docker compose push
+          docker compose -f docker-compose.prod.yml push
   deploy:
     strategy:
       matrix:
