@@ -1,76 +1,42 @@
-###########
-# BUILDER 1 #
-###########
-# pull official base image
-FROM krallin/ubuntu-tini:trusty as tini
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-###########
-# BUILDER 2 #
-###########
-# pull official base image
-FROM python:3.11.4-slim-buster as builder
-
-
-
-# set environment variables
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /usr/src/app
-# install system dependencies for the shell script
-RUN apt-get update && apt-get install -y netcat && \
-    apt-get install -y --no-install-recommends gcc
-
-
-# install python dependencies
-RUN pip install --upgrade pip
-RUN pip install flake8==6.0.0
-COPY ./requirements.txt .
-# RUN pip install -r requirements.txt
-
-
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
-
-#########
-# FINAL #
-#########
-
-# pull official base image
-FROM python:3.11.4-slim-buster
-
-# Copy tini package
-COPY --from=tini /usr/local/bin/tini /usr/local/bin/tini
-
-
-
 # create the app user
 RUN addgroup --system app && adduser --system --group app
+# Set the working directory
+WORKDIR /home/app
 
-# create the appropriate directories
 ENV HOME=/home/app
+
 RUN mkdir $HOME/staticfiles
-WORKDIR $HOME
 
-# install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends netcat
-COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --no-cache /wheels/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy the requirements file and install dependencies
+COPY ./requirements.txt $HOME/requirements.txt
+RUN pip install --no-cache-dir -r $HOME/requirements.txt
 
 # copy entrypoint.sh
 COPY entrypoint/entrypoint.prod.sh .
-RUN chmod +x /home/app/entrypoint.prod.sh  && \
+RUN chmod +x $HOME/entrypoint.prod.sh  && \
     sed -i 's/\r$//g' $HOME/entrypoint.prod.sh && \
-    chmod +x -R /home/app/staticfiles
-# chown all the files to the app user
-RUN chown -R app:app $HOME
 
-# copy project
-COPY app/ .
+# Copy the project files
+COPY . .
 
-# change to the app user
+# Change ownership and set permissions
+RUN chown -R app:app $HOME && \
+    chmod -R 755 $HOME/staticfiles
+
+# Switch to a non-root user
 USER app
-# run entrypoint.sh
 ENTRYPOINT ["/home/app/entrypoint.prod.sh"]
