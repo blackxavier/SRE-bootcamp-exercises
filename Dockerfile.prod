@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir -r $HOME/requirements.txt
 # copy entrypoint.sh
 COPY entrypoint/entrypoint.prod.sh .
 RUN chmod +x $HOME/entrypoint.prod.sh  && \
-    sed -i 's/\r$//g' $HOME/entrypoint.prod.sh && \
+    sed -i 's/\r$//g' $HOME/entrypoint.prod.sh && 
 
 # Copy the project files
 COPY . .

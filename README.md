@@ -6,7 +6,6 @@ This project is a Django-based API for managing student information. It allows f
 ### Table of Contents
 
 - [Features](#features)
-- [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)
   - [Prerequisites](#prerequisites)
   - [Local Development Setup](#local-development-setup)
@@ -49,7 +48,7 @@ This project is a Django-based API for managing student information. It allows f
 2. **Run compose file**
 
 ```
-docker compose up
+docker compose  up
 ```
 
 
